@@ -1,0 +1,20 @@
+name: sparsity-agnostic-depth-completion
+
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pytorch=1.12.*
+  - cudatoolkit=11.3
+  - h5py
+  - matplotlib
+  - scikit-image
+  - scipy
+  - tqdm
+  - ipython
+  - pip
+
+  - pip:
+    - streamlit
