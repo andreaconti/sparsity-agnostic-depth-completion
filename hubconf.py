@@ -1,44 +1,39 @@
 from pathlib import Path as _Path
 import torch as _torch
 from torch.utils.data import Dataset as _Dataset
-import tarfile as _tarfile
 from typing import Literal, Dict
 import h5py
 import numpy as np
 
 
-def _download(name: str, ext: str = "") -> _Path:
+def _download(name: str) -> _Path:
     """
-    Downloads from github the required resource, and if it is a tar dir it extract it in a
-    folder with the same name without extension
+    downloads a file from github and puts it under downloads
     """
-    if not (out_path := (_Path(__file__).parent / f"downloads/{name}{ext}")).exists():
+    to = _Path(__file__).parent  / "downloads" / name
+    if not to.exists():
         _torch.hub.download_url_to_file(
-            f"https://github.com/andreaconti/sparsity-agnostic-depth-completion/releases/download/v0.1.0/{name}{ext}",
-            str(_Path(__file__).parent / f"downloads/{name}{ext}"),
+            f"https://github.com/andreaconti/sparsity-agnostic-depth-completion/releases/download/v0.1.0/{name}",
+            to
         )
-    if ext == ".tar":
-        if not (out_dir := out_path.parent / name).exists():
-            with _tarfile.open(out_path) as tar:
-                out_dir = out_path.parent / name
-                out_dir.mkdir(exist_ok=True, parents=True)
-                tar.extractall(out_dir)
-        return out_dir
-    else:
-        return out_path
-
+    return to
 
 # precomputed results
 
 
 class _PrecomputedDataset(_Dataset):
-    def __init__(self, img_gt_root: _Path, pred_hints_root: _Path):
+    def __init__(self, img_gt_root: _Path, pred_hints_root: _Path, in_memory: bool = False):
         img_gt = h5py.File(img_gt_root)
-        self._img = np.array(img_gt["img"])
-        self._gt = np.array(img_gt["gt"])
+        self._img = img_gt["img"]
+        self._gt = img_gt["gt"]
         pred_hints = h5py.File(pred_hints_root)
-        self._preds = np.array(pred_hints["preds"])
-        self._hints = np.array(pred_hints["hints"])
+        self._preds = pred_hints["preds"]
+        self._hints = pred_hints["hints"]
+        if in_memory:
+            self._img = np.array(self._img)
+            self._gt = np.array(self._gt)
+            self._preds = np.array(self._preds)
+            self._hints = np.array(self._hints)
 
     def __len__(self):
         return self._img.shape[0]
@@ -53,23 +48,20 @@ class _PrecomputedDataset(_Dataset):
 
 
 def kitti_official_precomputed(
-    hints_density: Literal["lines4", "lines8", "lines16", "lines32", "lines64"]
+    hints_density: Literal["lines4", "lines8", "lines16", "lines32", "lines64"], 
+    in_memory: bool = False,
 ) -> _Dataset:
-    root = _download("kitti-official", ".tar")
-    return _PrecomputedDataset(
-        root / "img_gt.h5", root / f"pred_with_{hints_density}.h5"
-    )
+    assert hints_density in ["lines4", "lines8", "lines16", "lines32", "lines64"], f"{hints_density} not available"
+    img_gt = _download("kitti_img_gt.h5")
+    preds = _download(f"kitti_pred_with_{hints_density}.h5")
+    return _PrecomputedDataset(img_gt, preds, in_memory)
 
 
 def nyu_depth_v2_ma_downsampled_precomputed(
-    hints_density: Literal[5, 50, 100, 200, 500, "livox", "grid-shift"]
+    hints_density: Literal[5, 50, 100, 200, 500, "livox", "grid-shift"],
+    in_memory: bool = False
 ) -> _Dataset:
-    root = _download("nyu-depth-v2-ma-downsampled", ".tar")
-    return _PrecomputedDataset(
-        root / "img_gt.h5", root / f"pred_with_{hints_density}.h5"
-    )
-
-
-# models
-
-# TODO: wip
+    assert hints_density in [5, 50, 100, 200, 500, "livox", "grid-shift"], f"{hints_density} not available"
+    img_gt = _download("nyu_img_gt.h5")
+    preds = _download(f"nyu_pred_with_{hints_density}.h5")
+    return _PrecomputedDataset(img_gt, preds, in_memory)

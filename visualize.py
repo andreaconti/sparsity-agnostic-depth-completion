@@ -11,10 +11,6 @@ import torch
 
 ## Utilities
 
-# simple introduction and
-# a button for the dataset, a button for the number of hints
-# and finally a button for the example to visualize
-
 _DEBUG_LOCAL = False
 
 
@@ -54,12 +50,11 @@ def main():
             options = [5, 50, 100, 200, 500, "grid-shift", "livox"]
         density = st.selectbox("Hints Density", options=options)
 
-    data = load_data(ds_name, density)
 
     with right:
-        idx = st.number_input("Example Index", min_value=0, max_value=len(data))
+        idx = st.number_input("Example Index", min_value=0, max_value=len_data(ds_name, density) - 1)
 
-    ex = data[idx]
+    ex = load_data(ds_name, density, idx)
     img, hints, pred, gt = ex["img"], ex["hints"], ex["pred"], ex["gt"]
     if (d := cfg["dilate"]) > 0:
         hints = morphology.dilation(hints[..., 0], np.ones([d, d]))[..., None]
@@ -102,8 +97,8 @@ def show_img(label: str, dmap: np.ndarray, cmap=None):
     st.pyplot(fig)
 
 
-@st.cache
-def load_data(ds_name, density):
+@st.cache(show_spinner=False)
+def load_data(ds_name, density, idx):
     ds = torch.hub.load(
         "andreaconti/sparsity_agnostic_depth_completion"
         if not _DEBUG_LOCAL
@@ -112,7 +107,19 @@ def load_data(ds_name, density):
         density,
         source="github" if not _DEBUG_LOCAL else "local",
     )
-    return ds
+    return ds[idx]
+
+@st.cache(show_spinner=False)
+def len_data(ds_name, density):
+    ds = torch.hub.load(
+        "andreaconti/sparsity_agnostic_depth_completion"
+        if not _DEBUG_LOCAL
+        else str(Path(__file__).parent),
+        ds_name.replace("-", "_") + "_precomputed",
+        density,
+        source="github" if not _DEBUG_LOCAL else "local",
+    )
+    return len(ds)
 
 
 if __name__ == "__main__":

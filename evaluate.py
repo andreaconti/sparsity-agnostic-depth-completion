@@ -28,6 +28,7 @@ def main():
         else str(Path(__file__).parent),
         args.dataset.replace("-", "_") + "_precomputed",
         args.density,
+        in_memory=True,
         source="github" if not _DEBUG_LOCAL else "local",
     )
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
