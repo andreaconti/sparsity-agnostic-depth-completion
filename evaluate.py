@@ -30,6 +30,7 @@ def main():
         args.density,
         in_memory=True,
         source="github" if not _DEBUG_LOCAL else "local",
+        trust_repo=True,
     )
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 

@@ -41,14 +41,14 @@ def main():
     left, center, right = st.columns(3)
     with left:
         ds_name = st.selectbox(
-            "Dataset", options=["kitti-official", "nyu-depth-v2-ma-downsampled"]
+            "Dataset", options=["kitti-official", "nyu-depth-v2-ma-downsampled"], index=1
         )
     with center:
         if ds_name == "kitti-official":
             options = ["lines4", "lines8", "lines16", "lines32", "lines64"]
         else:
             options = [5, 50, 100, 200, 500, "grid-shift", "livox"]
-        density = st.selectbox("Hints Density", options=options)
+        density = st.selectbox("Hints Density", options=options, index=4)
 
 
     with right:
@@ -100,24 +100,26 @@ def show_img(label: str, dmap: np.ndarray, cmap=None):
 @st.cache(show_spinner=False)
 def load_data(ds_name, density, idx):
     ds = torch.hub.load(
-        "andreaconti/sparsity_agnostic_depth_completion"
+        "andreaconti/sparsity-agnostic-depth-completion"
         if not _DEBUG_LOCAL
         else str(Path(__file__).parent),
         ds_name.replace("-", "_") + "_precomputed",
         density,
         source="github" if not _DEBUG_LOCAL else "local",
+        trust_repo=True,
     )
     return ds[idx]
 
 @st.cache(show_spinner=False)
 def len_data(ds_name, density):
     ds = torch.hub.load(
-        "andreaconti/sparsity_agnostic_depth_completion"
+        "andreaconti/sparsity-agnostic-depth-completion"
         if not _DEBUG_LOCAL
         else str(Path(__file__).parent),
         ds_name.replace("-", "_") + "_precomputed",
         density,
         source="github" if not _DEBUG_LOCAL else "local",
+        trust_repo=True,
     )
     return len(ds)
 
