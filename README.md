@@ -1,4 +1,4 @@
-# [Sparsity Agnostic Depth Completion](https://arxiv-export1.library.cornell.edu/pdf/2212.00790)
+# [Sparsity Agnostic Depth Completion](https://openaccess.thecvf.com/content/WACV2023/html/Conti_Sparsity_Agnostic_Depth_Completion_WACV_2023_paper.html)
 
 <p>
 <div align="center">
@@ -14,19 +14,20 @@
 </div>
 </p>
 
-This repository provides the evaluation code for our WACV 2023 [paper](https://arxiv.org/pdf/2212.00790.pdf).
+This repository provides the evaluation code for our WACV 2023 [paper](https://openaccess.thecvf.com/content/WACV2023/html/Conti_Sparsity_Agnostic_Depth_Completion_WACV_2023_paper.html).
 
 We present a novel depth completion approach agnostic to the sparsity of depth points, that is very likely to vary in many practical applications. State-of-the-art approaches yield accurate results only when processing a specific density and distribution of input points, i.e. the one observed during training, narrowing their deployment in real use cases. On the contrary, our solution is robust to uneven distributions and extremely low densities never witnessed during training. Experimental results on standard indoor and outdoor benchmarks highlight the robustness of our framework, achieving accuracy comparable to state-of-the-art methods when tested with density and distribution equal to the training one while being much more accurate in the other cases.
 
 ## Citation
 
 ```
-@inproceedings{aconti2023spagnet,
-    title={Sparsity Agnostic Depth Completion},
-    author={Conti, Andrea and Poggi, Matteo and Mattoccia, Stefano},
-    booktitle={IEEE/CVF Winter Conference on Applications of Computer Vision},
-    note={WACV},
-    year={2023},
+@InProceedings{Conti_2023_WACV,
+    author    = {Conti, Andrea and Poggi, Matteo and Mattoccia, Stefano},
+    title     = {Sparsity Agnostic Depth Completion},
+    booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+    month     = {January},
+    year      = {2023},
+    pages     = {5871-5880}
 }
 ```
 
