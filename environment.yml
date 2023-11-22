@@ -17,4 +17,4 @@ dependencies:
   - pip
 
   - pip:
-    - streamlit
+    - streamlit==1.28.1

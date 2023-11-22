@@ -97,7 +97,7 @@ def show_img(label: str, dmap: np.ndarray, cmap=None):
     st.pyplot(fig)
 
 
-@st.cache(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def load_data(ds_name, density, idx):
     ds = torch.hub.load(
         "andreaconti/sparsity-agnostic-depth-completion"
@@ -110,7 +110,7 @@ def load_data(ds_name, density, idx):
     )
     return ds[idx]
 
-@st.cache(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def len_data(ds_name, density):
     ds = torch.hub.load(
         "andreaconti/sparsity-agnostic-depth-completion"
