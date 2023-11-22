@@ -1,4 +1,6 @@
-# [Sparsity Agnostic Depth Completion](https://openaccess.thecvf.com/content/WACV2023/html/Conti_Sparsity_Agnostic_Depth_Completion_WACV_2023_paper.html)
+<h1 align="center">
+<a href=https://openaccess.thecvf.com/content/WACV2023/html/Conti_Sparsity_Agnostic_Depth_Completion_WACV_2023_paper.html>Sparsity Agnostic Depth Completion</a>
+</h1>
 
 <p>
 <div align="center">
